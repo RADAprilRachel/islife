@@ -24,6 +24,21 @@
     <%= form.label :title %><br>
     <%= form.text_field :title %>
   </p>
+
+  <p>
+    <%= form.label :images %>
+    <%= form.file_field :images, multiple: true %>
+    <% if @page.images.attached? and not @page.errors.any? %>
+      <% @page.images.includes(:blob).references(:blob).order('active_storage_blobs.filename ASC').each do |image| %>
+        <%= form.hidden_field :images, multiple: true, value: image.signed_id %>
+        <%= image_tag image, class: "img_preview" %>
+        <%= image.filename %>
+        <%= link_to 'Remove', delete_image_attachment_page_url(attachment_id: image.id, page_id: @page.id),
+          method: :delete,
+          data: { confirm: 'Are you sure?' } %>
+      <% end %>
+    <% end %>
+  </p>
  
   <p>
     <%= form.submit %>

@@ -5,7 +5,23 @@
 <p>
   <strong>Date:</strong>
   <%= @page.date %>
+  <% @page.images.includes(:blob).references(:blob).order('active_storage_blobs.filename ASC').each do |image| %>
+    <%= image_tag image, class: "img_preview" %>
+    <%= image.filename %>
+  <% end %>
 
-  <%= link_to 'Index', pages_path(@page) %> |
-  <%= link_to 'Edit', edit_page_path(@page) %>
+  <%= link_to 'First', page_path(@first) %> |
+  <% if @previous %>
+    <%= link_to 'Prev', page_path(@previous) %> |
+  <% else %>
+    Prev
+  <% end %>
+  <%= link_to 'Index', pages_path() %> |
+  <%= link_to 'Edit', edit_page_path(@page) %> |
+  <% if @next %>
+    <%= link_to 'Next', page_path(@next) %> |
+  <% else %>
+    Next
+  <% end %>
+  <%= link_to 'Last', page_path(@last) %>
 </p>
